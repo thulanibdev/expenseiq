@@ -1,14 +1,20 @@
 'use client'
 import { useState, useMemo } from 'react'
+import { parseAmount, toCSV } from '@/lib/transactions'
 import { CATEGORIES, getCat, formatCurrency, formatDate, getCurrentMonth } from '@/lib/data'
 
 function TransactionForm({ onAdd, onClose }) {
   const [form, setForm] = useState({ type: 'expense', amount: '', category: 'food', description: '', date: new Date().toISOString().slice(0, 10) })
+  const [error, setError] = useState('')
   const expenseCategories = CATEGORIES.filter(c => c.id !== 'income')
 
   const submit = () => {
-    if (!form.amount || !form.description.trim()) return
-    onAdd({ ...form, amount: parseFloat(form.amount), id: Date.now() })
+    const amount = parseAmount(form.amount)
+    if (amount === null || !form.description.trim() || !form.date) {
+      setError('Enter a positive amount, description and date.')
+      return
+    }
+    onAdd({ ...form, description: form.description.trim(), amount, id: crypto.randomUUID() })
     onClose()
   }
 
@@ -56,6 +62,7 @@ function TransactionForm({ onAdd, onClose }) {
             className="w-full border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm font-body bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white" />
         </div>
 
+        {error && <p role="alert" className="text-sm text-danger">{error}</p>}
         <div className="flex gap-2 justify-end pt-1">
           <button onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-body text-muted border border-border dark:border-border-dark">Cancel</button>
           <button onClick={submit} className="px-6 py-2 rounded-xl text-sm font-body font-semibold bg-brand text-white hover:bg-brand-light transition-colors">Add</button>
@@ -85,10 +92,11 @@ export default function Transactions({ transactions, onAdd, onDelete }) {
   const exportCSV = () => {
     const rows = [['Date', 'Type', 'Category', 'Description', 'Amount']]
     filtered.forEach(t => rows.push([t.date, t.type, getCat(t.category).label, t.description, t.amount]))
-    const csv = rows.map(r => r.join(',')).join('\n')
+    const csv = toCSV(rows)
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a'); a.href = url; a.download = 'expenseiq-export.csv'; a.click()
+    URL.revokeObjectURL(url)
   }
 
   return (

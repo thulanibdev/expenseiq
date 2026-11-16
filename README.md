@@ -1,52 +1,39 @@
-# 💰 ExpenseIQ — Smart Personal Finance Dashboard
+# ExpenseIQ
 
-A full-featured personal finance tracker built with **Next.js 14** and **Tailwind CSS**. No backend or API keys needed — everything saves locally in your browser.
+A personal finance dashboard for recording income, expenses and category budgets.
+
+[Live demo](https://expenseiq-five.vercel.app/) · [Source](https://github.com/thulanibdev/expenseiq)
 
 ## Features
 
-- **📊 Dashboard** — Monthly overview with income, expenses, balance, and category breakdown
-- **💳 Transactions** — Add, filter, search, and delete transactions. Export to CSV.
-- **📈 Analytics** — Custom SVG bar chart (income vs expenses) and pie chart (spending breakdown) built from scratch — no chart library needed
-- **🎯 Budget Goals** — Set monthly limits per category with progress bars and overspending alerts
-- **💡 Smart Insights** — Automatic tips based on your spending patterns
-- **🌙 Dark Mode** — Full dark/light mode toggle
-- **📱 Responsive** — Works on mobile, tablet, and desktop
+Transaction filtering, dashboard charts, budgets and CSV export.
 
-## Getting Started
+Amounts must be positive. CSV exports preserve commas, quotes and newlines, and neutralise formula-like text.
+
+## Stack and data
+
+Next.js 14, React, Tailwind CSS and browser localStorage.
+
+Browser-stored data belongs to the current browser profile. It does not sync to a user account, and clearing site data removes it. This is a portfolio project in ongoing development.
+
+## Run locally
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/expenseiq.git
-cd expenseiq
-npm install
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — loads with sample data so you can explore right away!
+Open http://localhost:3000. No API credentials are needed.
 
-## Deploy to Vercel
+## Verification
 
-1. Push to GitHub
-2. Import on [vercel.com](https://vercel.com)
-3. Click Deploy — no environment variables needed!
+```bash
+npm test
+npm run build
+```
 
-## Tech Stack
+The tests cover the project's persistence or business logic and error cases. They do not validate third-party services or prove that every live-demo feature works.
 
-| Tool | Purpose |
-|------|---------|
-| Next.js 14 | React framework |
-| Tailwind CSS | Styling + dark mode |
-| SVG | Custom charts (no library!) |
-| localStorage | Data persistence |
-| Vercel | Deployment |
+## Development priorities
 
-## What Makes This Impressive
-
-- **Custom SVG charts** — pie chart and bar chart written entirely from scratch using SVG math, no Recharts or Chart.js
-- **Smart insights engine** — analyzes spending patterns and generates personalized tips
-- **CSV export** — real file download functionality
-- **Dark mode** — persisted preference across sessions
-- **Production architecture** — clean component structure, custom hooks, separated data layer
-
-## License
-
-MIT
+Improve accessibility, document design decisions and add integration coverage as the project develops. Keep secret keys in local environment configuration and out of Git.
